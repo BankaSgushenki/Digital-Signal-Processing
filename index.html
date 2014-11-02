@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.17/angular.min.js"></script>
-    <script src="http://d3js.org/d3.v2.min.js?2.10.0"></script>
+    <link rel="stylesheet" href="./bootstrap.css">
+    <script src="./angular.min.js"></script>
+    <script src="./d3.js"></script>
     <script src="./math.js"></script>
 </head>
 <style>
@@ -37,6 +37,10 @@
     border-radius: 10px;
   }
 
+  label {
+    text-align: center;
+  }
+
   .iterations {
     display: inline-block;
     position: relative;
@@ -47,15 +51,16 @@
   }
   #tabs {
     padding-left: 20px !important;
+    margin-top: 10px;
   }
 
 </style>
 <body ng-app = "graph">
   <div class = 'container' ng-controller = "graphController">
-    <input type = 'text' class="form-control" placeholder="Function" ng-model = "graphParameters.expression">
-    <input type = 'text' class="form-control" placeholder="Sampling rate" ng-model = "graphParameters.N">
-    <input type = 'text' class="form-control" placeholder="Min X" ng-model = "graphParameters.left">
-    <input type = 'text' class="form-control" placeholder="Max X" ng-model = "graphParameters.right">
+    <label><input type = 'text' class="form-control" placeholder="Function" ng-model = "graphParameters.expression">Function</label>
+    <label><input type = 'text' class="form-control" placeholder="Sampling rate" ng-model = "graphParameters.N">Sampling rate</label>
+    <label><input type = 'text' class="form-control" placeholder="Min X" ng-model = "graphParameters.left">Min X</label>
+    <label><input type = 'text' class="form-control" placeholder="Max X" ng-model = "graphParameters.right">Max X</label>
 
     <ul id = "tabs" class="nav nav-tabs" role="tablist">
       <li role="presentation" ng-class = "{active : app.checkState('fn')}"><a href="#home" role="tab" data-toggle="tab" ng-click = "drawFunction()">Function</a></li>

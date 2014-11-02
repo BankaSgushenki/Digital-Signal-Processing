@@ -167,8 +167,9 @@ graph.controller('graphController', function ($scope) {
         $scope.app.state = 'ift';
         $scope.data = IDFT($scope.data);
 
+        var step =  ($scope.graphParameters.right - $scope.graphParameters.left)/$scope.graphParameters.N;
         for (var i = 0; i < $scope.data.length; i++) {
-          $scope.data[i] = {x: i, y: $scope.data[i].re/$scope.data.length}
+          $scope.data[i] = {x: i*step, y: $scope.data[i].re/$scope.data.length}
         }
         drawGraph($scope.data);
     }
