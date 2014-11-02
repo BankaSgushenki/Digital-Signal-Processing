@@ -26,23 +26,45 @@
 
 
   input {
-    margin: 5px;
+    margin: 10px 0;
   }
   .container {
-    width: 980px;
+    padding: 30px;
+    width: 1024px;
     margin: 50px auto;
     position: relative;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+
+  .iterations {
+    display: inline-block;
+    position: relative;
+    left: 200px;
+    top: 15px;
+    font-size: 2em;
+    line-height: 2em;
+  }
+  #tabs {
+    padding-left: 20px !important;
   }
 
 </style>
 <body ng-app = "graph">
   <div class = 'container' ng-controller = "graphController">
     <input type = 'text' class="form-control" placeholder="Function" ng-model = "graphParameters.expression">
-    <input type = 'text' class="form-control" disabled placeholder="Step" ng-model = "graphParameters.step">
+    <input type = 'text' class="form-control" placeholder="Sampling rate" ng-model = "graphParameters.N">
     <input type = 'text' class="form-control" placeholder="Min X" ng-model = "graphParameters.left">
     <input type = 'text' class="form-control" placeholder="Max X" ng-model = "graphParameters.right">
-    <input type = 'button' class = "btn btn-success" value = "Function" ng-click = "base()">
-    <input type = 'button' class = "btn btn-success" value = "DFT" ng-click = "fourier(graphParameters.expression)">
+
+    <ul id = "tabs" class="nav nav-tabs" role="tablist">
+      <li role="presentation" ng-class = "{active : app.checkState('fn')}"><a href="#home" role="tab" data-toggle="tab" ng-click = "drawFunction()">Function</a></li>
+      <li role="presentation" ng-class = "{active : app.checkState('dft')}"><a href="#Function" role="tab" data-toggle="tab" ng-click = "fourier(graphParameters.expression, 'dft')">DFT</a></li>
+      <li role="presentation" ng-class = "{active : app.checkState('fft')}"><a href="#DFT" role="tab" data-toggle="tab"  ng-click = "fourier(graphParameters.expression, 'fft')">FFT</a></li>
+      <li role="presentation" ng-class = "{active : app.checkState('ift')}"><a href="#IDFT" role="tab" data-toggle="tab" ng-click = "inverseFourier()">IDFT</a></li>
+    </ul>
+
+    <p class = 'iterations'>Iterations: {{iterations}}</p>
   </div>
   <script src="./index.js"></script>
 <body>

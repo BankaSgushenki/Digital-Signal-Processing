@@ -6,12 +6,19 @@ var graph = angular.module('graph', []);
 
 graph.controller('graphController', function ($scope) {
     $scope.data = [];
-    $scope.fourierData = [];
+    $scope.iterations = 0;
     $scope.graphParameters = {
-      expression: 'sin(2x) + cos(3x)',
-      step: 0.1,
-      right: 16,
-      left: 0,
+      expression: 'sin(2x) + cos(2x)',
+      N: 16,
+      right: 6,
+      left: 0
+    }
+
+    $scope.app = {
+      state: 'fn',
+      checkState: function(state) {
+        if(state === this.state) return true;
+      }
     }
 
     var margin = {top: 20, right: 20, bottom: 30, left: 40},
@@ -42,8 +49,8 @@ graph.controller('graphController', function ($scope) {
       .x(function(d) { return x(d.x); })
       .y(function(d) { return y(d.y); });
 
-    function scope(x, k) {
-        return {x: x, k : k}
+    function scope(t, k, n) {
+        return {x: t, k : k, n : n}
     }
 
     function drawGraph(data) {
@@ -67,35 +74,104 @@ graph.controller('graphController', function ($scope) {
           .attr("d", line);
     }
 
-    $scope.base = function() {
+    function DFT(input) {
+      var n = input.length;
+      var result = [];
+      for (var k = 0; k < n; k++) {
+          var re = 0;
+          var im = 0;
+          for (var t = 0; t < n; t++) {
+              var angle = 2 * Math.PI * t * k / n;
+              re +=  input[t] * Math.cos(angle);
+              im += -input[t] * Math.sin(angle);
+              $scope.iterations++;
+          }
+          result.push(math.complex(re, im));
+      }
+      return result;
+    }
+
+    function FFT(input) {
+      if (input.length === 1) return input;
+
+      var evenElements = FFT(input.filter(function(element, index) { return (index % 2 === 0)}));
+      var oddElements = FFT(input.filter(function(element, index) { return !(index % 2 === 0)}));
+      
+      var result  = [];
+      var N = input.length/2;
+      for (var k = 0; k < N; k++) {
+            var kth = - k * Math.PI/N;
+            var W =  math.complex(Math.cos(kth), Math.sin(kth));
+            result[k] = math.add(evenElements[k], math.multiply(W, oddElements[k]));
+            result[k + N] = math.subtract(evenElements[k], math.multiply(W, oddElements[k]));
+            $scope.iterations++;
+          }
+      return result;
+    }
+
+    function IDFT(input) {
+      input.forEach(function(x) { 
+        x = math.conj(x)
+      });
+
+      var result = FFT(input);
+
+      result.forEach(function(x) { 
+        x = math.conj(x)
+      });
+      $scope.iterations = 0;
+      return result;
+
+    }
+
+    $scope.drawFunction = function() {
+      $scope.app.state = 'fn';
+      var step =  ($scope.graphParameters.right - $scope.graphParameters.left)/$scope.graphParameters.N;
+      $scope.data = [];
+      for (var i = $scope.graphParameters.left; i < $scope.graphParameters.right; i += step) {
+        $scope.data._append(i,math.eval($scope.graphParameters.expression, scope(i)));
+      }     
       drawGraph($scope.data);
     }
 
-    $scope.fourier = function(expression) {
-      $scope.fourierData = [];
-      for (var i = 0; i < 16; i += 0.1) {
-        $scope.fourierData._append(i,math.eval(expression, scope(i)));
+    $scope.fourier = function(expression, type) {
+      $scope.app.state = type;
+      var step =  ($scope.graphParameters.right - $scope.graphParameters.left)/$scope.graphParameters.N;
+      var fourierData = [];
+      $scope.iterations = 0;
+      for (var i = Number($scope.graphParameters.left); i < Number($scope.graphParameters.right); i += step) {
+        fourierData.push(math.eval(expression, scope(i)));
       }
-      $scope.fourierData = $scope.fourierData.map(function (entry) {
+
+      switch(type) {
+          case 'dft': 
+            fourierData = DFT(fourierData);
+            break;
+          case 'fft': 
+            fourierData = FFT(fourierData);
+            break;
+      }
+
+     $scope.data = fourierData;
+     var N = fourierData.length;
+     var graphData = fourierData.map(function (entry, index) {
         return {
-          x: entry.x,
-          y: math.eval('x*e^(-2*PI*i/16)',scope(entry.y, entry.x))
+          x: index/N,
+          y: entry.toPolar().r/N
         }
       });
-      $scope.fourierData = $scope.fourierData.map(function (entry) {
-        return {
-          x: entry.x,
-          y: math.sqrt(entry.y.re*entry.y.re + entry.y.im*entry.y.im)
-        }
-      });
-      drawGraph($scope.fourierData);
+      drawGraph(graphData);
     }
 
-    $scope.$watch('graphParameters', function(newVal, oldVal){
-      $scope.data = [];
-      for (var i = Number($scope.graphParameters.left); i < Number($scope.graphParameters.right); i += Number($scope.graphParameters.step)) {
-        $scope.data._append(i,math.eval($scope.graphParameters.expression, scope(i)));
-      }     
-      drawGraph($scope.data)
-    }, true);
+    $scope.inverseFourier = function() {
+        $scope.app.state = 'ift';
+        $scope.data = IDFT($scope.data);
+
+        for (var i = 0; i < $scope.data.length; i++) {
+          $scope.data[i] = {x: i, y: $scope.data[i].re/$scope.data.length}
+        }
+        drawGraph($scope.data);
+    }
+
+    $scope.$watch('graphParameters', function(newVal, oldVal){ $scope.drawFunction() }, true);
 });
