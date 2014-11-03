@@ -113,12 +113,7 @@ graph.controller('graphController', function ($scope) {
       input.forEach(function(x) { 
         x = math.conj(x)
       });
-
       var result = FFT(input);
-
-      result.forEach(function(x) { 
-        x = math.conj(x)
-      });
       $scope.iterations = 0;
       return result;
 
@@ -129,7 +124,12 @@ graph.controller('graphController', function ($scope) {
       var step =  ($scope.graphParameters.right - $scope.graphParameters.left)/$scope.graphParameters.N;
       $scope.data = [];
       for (var i = $scope.graphParameters.left; i < $scope.graphParameters.right; i += step) {
-        $scope.data._append(i,math.eval($scope.graphParameters.expression, scope(i)));
+        try {
+          $scope.data._append(i,math.eval($scope.graphParameters.expression, scope(i)));
+        }
+        catch(e) {
+          console.log(e);
+        }
       }     
       drawGraph($scope.data);
     }
