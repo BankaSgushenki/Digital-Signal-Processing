@@ -64,8 +64,10 @@
 
     <ul id = "tabs" class="nav nav-tabs" role="tablist">
       <li role="presentation" ng-class = "{active : app.checkState('fn')}"><a href="#home" role="tab" data-toggle="tab" ng-click = "drawFunction()">Function</a></li>
-      <li role="presentation" ng-class = "{active : app.checkState('dft')}"><a href="#Function" role="tab" data-toggle="tab" ng-click = "fourier(graphParameters.expression, 'dft')">DFT</a></li>
-      <li role="presentation" ng-class = "{active : app.checkState('fft')}"><a href="#DFT" role="tab" data-toggle="tab"  ng-click = "fourier(graphParameters.expression, 'fft')">FFT</a></li>
+      <li role="presentation" ng-class = "{active : app.checkState('dftamp')}"><a href="#Function" role="tab" data-toggle="tab" ng-click = "fourier(graphParameters.expression, 'dft', 'amp')">DFT-Amp</a></li>
+      <li role="presentation" ng-class = "{active : app.checkState('dftphase')}"><a href="#Function" role="tab" data-toggle="tab" ng-click = "fourier(graphParameters.expression, 'dft', 'phase')">DFT-Phase</a></li>
+      <li role="presentation" ng-class = "{active : app.checkState('fftamp')}"><a href="#DFT" role="tab" data-toggle="tab"  ng-click = "fourier(graphParameters.expression, 'fft', 'amp')">FFT-Amp</a></li>
+      <li role="presentation" ng-class = "{active : app.checkState('fftphase')}"><a href="#DFT" role="tab" data-toggle="tab"  ng-click = "fourier(graphParameters.expression, 'fft', 'phase')">FFT-Phase</a></li>
       <li role="presentation" ng-class = "{active : app.checkState('ift')}"><a href="#IDFT" role="tab" data-toggle="tab" ng-click = "inverseFourier()">IDFT</a></li>
     </ul>
 

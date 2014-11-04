@@ -104,7 +104,7 @@ graph.controller('graphController', function ($scope) {
             var W =  math.complex(Math.cos(kth), Math.sin(kth));
             result[k] = math.add(evenElements[k], math.multiply(W, oddElements[k]));
             result[k + N] = math.subtract(evenElements[k], math.multiply(W, oddElements[k]));
-            $scope.iterations++;
+            $scope.iterations+=2;
           }
       return result;
     }
@@ -114,9 +114,28 @@ graph.controller('graphController', function ($scope) {
         x = math.conj(x)
       });
       var result = FFT(input);
-      $scope.iterations = 0;
       return result;
 
+    }
+
+    function format(input, type) {
+      var N = input.length;
+      switch(type) {
+        case 'phase':
+          return input.map(function (entry, index) {
+            return {
+              x: index/N,
+              y: entry.toPolar().phi/N
+            }
+          });
+        case 'amp':
+           return input.map(function (entry, index) {
+             return {
+               x: index/N,
+               y: entry.toPolar().r/N
+             }
+           });
+      }
     }
 
     $scope.drawFunction = function() {
@@ -134,38 +153,33 @@ graph.controller('graphController', function ($scope) {
       drawGraph($scope.data);
     }
 
-    $scope.fourier = function(expression, type) {
-      $scope.app.state = type;
+    $scope.fourier = function(expression, transformType, spectrType) {
+      $scope.app.state = transformType + spectrType;
       var step =  ($scope.graphParameters.right - $scope.graphParameters.left)/$scope.graphParameters.N;
       var fourierData = [];
       $scope.iterations = 0;
-      for (var i = Number($scope.graphParameters.left); i < Number($scope.graphParameters.right); i += step) {
+      for (var i = $scope.graphParameters.left; i < $scope.graphParameters.right; i += step) {
         fourierData.push(math.eval(expression, scope(i)));
       }
 
-      switch(type) {
-          case 'dft': 
+      switch(transformType) {
+          case 'dft':
             fourierData = DFT(fourierData);
             break;
-          case 'fft': 
+          case 'fft':
             fourierData = FFT(fourierData);
             break;
       }
 
-     $scope.data = fourierData;
-     var N = fourierData.length;
-     var graphData = fourierData.map(function (entry, index) {
-        return {
-          x: index/N,
-          y: entry.toPolar().r/N
-        }
-      });
+      $scope.data = fourierData;
+      var graphData = format(fourierData, spectrType);
       drawGraph(graphData);
     }
 
     $scope.inverseFourier = function() {
         $scope.app.state = 'ift';
         $scope.data = IDFT($scope.data);
+        $scope.iterations = 0;
 
         var step =  ($scope.graphParameters.right - $scope.graphParameters.left)/$scope.graphParameters.N;
         for (var i = 0; i < $scope.data.length; i++) {
