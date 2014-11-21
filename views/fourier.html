@@ -1,64 +1,6 @@
-<!DOCTYPE html>
-<meta charset="utf-8">
-<head>
-    <link rel="stylesheet" href="libraries/bootstrap.css">
-    <script src="libraries/angular.min.js"></script>
-    <script src="libraries/d3.js"></script>
-    <script src="libraries/math.js"></script>
-    <script src = "libraries/angular-route.min.js"></script>
-</head>
-<style>
-  body {
-    font: 10px sans-serif;
-  }
 
-  .axis path,
-  .axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-  }
-
-  .line {
-    fill: none;
-    stroke: steelblue;
-    stroke-width: 1.5px;
-  }
-
-
-  input {
-    margin: 10px 0;
-  }
-  .container {
-    padding: 30px;
-    width: 1024px;
-    margin: 50px auto;
-    position: relative;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-  }
-
-  label {
-    text-align: center;
-  }
-
-  .iterations {
-    display: inline-block;
-    position: relative;
-    left: 200px;
-    top: 15px;
-    font-size: 2em;
-    line-height: 2em;
-  }
-  #tabs {
-    padding-left: 20px !important;
-    margin-top: 10px;
-  }
-
-</style>
-<body ng-app = "dsp">
   <div class = 'container' ng-controller = "fourierController">
-   <label><input type = 'text' class="form-control" placeholder="Function" ng-model = "graphParameters.expression">Function</label>
+    <label><input type = 'text' class="form-control" placeholder="Function" ng-model = "graphParameters.expression">Function</label>
     <label><input type = 'text' class="form-control" placeholder="Sampling rate" ng-model = "graphParameters.N">Sampling rate</label>
     <label><input type = 'text' class="form-control" placeholder="Min X" ng-model = "graphParameters.left">Min X</label>
     <label><input type = 'text' class="form-control" placeholder="Max X" ng-model = "graphParameters.right">Max X</label>
@@ -74,9 +16,3 @@
 
     <p class = 'iterations'>Iterations: {{iterations}}</p>
   </div>
-  
-  <script src="app.js"></script>
-  <script src="scripts/services/fourierService.js"></script>
-  <script src="scripts/services/graphService.js"></script>
-  <script src="scripts/controllers/fourierCtrl.js"></script>
-<body>
