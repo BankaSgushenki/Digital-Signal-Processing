@@ -21,7 +21,6 @@
 
   .line {
     fill: none;
-    stroke: steelblue;
     stroke-width: 1.5px;
   }
 
@@ -58,23 +57,23 @@
 </style>
 <body ng-app = "dsp">
   <div class = 'container' ng-controller = "fourierController">
-   <label><input type = 'text' class="form-control" placeholder="Function" ng-model = "graphParameters.expression">Function</label>
-    <label><input type = 'text' class="form-control" placeholder="Sampling rate" ng-model = "graphParameters.N">Sampling rate</label>
-    <label><input type = 'text' class="form-control" placeholder="Min X" ng-model = "graphParameters.left">Min X</label>
-    <label><input type = 'text' class="form-control" placeholder="Max X" ng-model = "graphParameters.right">Max X</label>
+    <label><input type = 'text' class="form-control" placeholder="Function" ng-model = "parameters.expression">Function</label>
+    <label><input type = 'text' class="form-control" placeholder="Sampling rate" ng-model = "parameters.N">Sampling rate</label>
+    <label><input type = 'text' class="form-control" placeholder="Min X" disabled ng-model = "parameters.x_min">Min X</label>
+    <label><input type = 'text' class="form-control" placeholder="Max X" ng-model = "parameters.x_max">Max X</label>
 
     <ul id = "tabs" class="nav nav-tabs" role="tablist">
       <li role="presentation" ng-class = "{active : app.checkState('fn')}"><a role="tab" data-toggle="tab" ng-click = "drawFunction()">Function</a></li>
-      <li role="presentation" ng-class = "{active : app.checkState('dftamp')}"><a role="tab" data-toggle="tab" ng-click = "fourier(graphParameters.expression, 'dft', 'amp')">DFT-Amp</a></li>
-      <li role="presentation" ng-class = "{active : app.checkState('dftphase')}"><a role="tab" data-toggle="tab" ng-click = "fourier(graphParameters.expression, 'dft', 'phase')">DFT-Phase</a></li>
-      <li role="presentation" ng-class = "{active : app.checkState('fftamp')}"><a role="tab" data-toggle="tab"  ng-click = "fourier(graphParameters.expression, 'fft', 'amp')">FFT-Amp</a></li>
-      <li role="presentation" ng-class = "{active : app.checkState('fftphase')}"><a role="tab" data-toggle="tab"  ng-click = "fourier(graphParameters.expression, 'fft', 'phase')">FFT-Phase</a></li>
+      <li role="presentation" ng-class = "{active : app.checkState('dftamp')}"><a role="tab" data-toggle="tab" ng-click = "fourier(parameters.expression, 'dft', 'amp')">DFT-Amp</a></li>
+      <li role="presentation" ng-class = "{active : app.checkState('dftphase')}"><a role="tab" data-toggle="tab" ng-click = "fourier(parameters.expression, 'dft', 'phase')">DFT-Phase</a></li>
+      <li role="presentation" ng-class = "{active : app.checkState('fftamp')}"><a role="tab" data-toggle="tab"  ng-click = "fourier(parameters.expression, 'fft', 'amp')">FFT-Amp</a></li>
+      <li role="presentation" ng-class = "{active : app.checkState('fftphase')}"><a role="tab" data-toggle="tab"  ng-click = "fourier(parameters.expression, 'fft', 'phase')">FFT-Phase</a></li>
       <li role="presentation" ng-class = "{active : app.checkState('ift')}"><a role="tab" data-toggle="tab" ng-click = "inverseFourier()">IDFT</a></li>
     </ul>
 
     <p class = 'iterations'>Iterations: {{iterations}}</p>
   </div>
-  
+
   <script src="app.js"></script>
   <script src="scripts/services/fourierService.js"></script>
   <script src="scripts/services/graphService.js"></script>

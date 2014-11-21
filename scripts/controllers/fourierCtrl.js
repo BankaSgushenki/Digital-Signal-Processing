@@ -1,11 +1,11 @@
 dsp.controller('fourierController', ['$scope', 'transform', 'graph', function ($scope, transform, graph) {
     $scope.data = [];
     $scope.iterations = 0;
-    $scope.graphParameters = {
+    $scope.parameters = {
       expression: 'sin(2x) + cos(2x)',
       N: 64,
-      right: 6,
-      left: 0
+      x_max: 6,
+      x_min: 0
     }
 
     $scope.app = {
@@ -41,18 +41,18 @@ dsp.controller('fourierController', ['$scope', 'transform', 'graph', function ($
 
     $scope.drawFunction = function() {
       $scope.app.state = 'fn';
-      var step =  ($scope.graphParameters.right - $scope.graphParameters.left)/$scope.graphParameters.N;
+      var step =  ($scope.parameters.x_max - $scope.parameters.x_min)/$scope.parameters.N;
       $scope.data = [];
-      for (var i = $scope.graphParameters.left; i < $scope.graphParameters.right; i += step) {
+      for (var i = $scope.parameters.x_min; i < $scope.parameters.x_max; i += step) {
         try {
           $scope.data.push({
               x: i,
-              y: math.eval($scope.graphParameters.expression, scope(i))
+              y: math.eval($scope.parameters.expression, scope(i))
             });
         }
         catch(e) {}
       }     
-      graph.draw($scope.data);
+      graph.draw($scope.data, "steelblue");
     }
 
     $scope.fourier = function(expression, transformType, spectrType) {
@@ -71,7 +71,7 @@ dsp.controller('fourierController', ['$scope', 'transform', 'graph', function ($
       }
 
       $scope.data = fourierData;
-      graph.draw(format(fourierData, spectrType));
+      graph.draw(format(fourierData, spectrType), "steelblue");
     }
 
     $scope.inverseFourier = function() {
@@ -79,12 +79,12 @@ dsp.controller('fourierController', ['$scope', 'transform', 'graph', function ($
         $scope.data = transform.IFFT($scope.data);
         $scope.iterations = 0;
 
-        var step =  ($scope.graphParameters.right - $scope.graphParameters.left)/$scope.graphParameters.N;
+        var step =  ($scope.parameters.x_max - $scope.parameters.x_min)/$scope.parameters.N;
         for (var i = 0; i < $scope.data.length; i++) {
           $scope.data[i] = {x: i*step, y: $scope.data[i].re/$scope.data.length}
         }
-        graph.draw($scope.data);
+        graph.draw($scope.data, "steelblue");
     }
 
-    $scope.$watch('graphParameters', function(newVal, oldVal){ $scope.drawFunction() }, true);
+    $scope.$watch('parameters', function(newVal, oldVal){ $scope.drawFunction() }, true);
 }]);

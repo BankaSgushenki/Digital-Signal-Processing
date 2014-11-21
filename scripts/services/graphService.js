@@ -3,11 +3,7 @@ dsp.service('graph', function() {
       width = 960 - margin.left - margin.right,
       height = 400 - margin.top - margin.bottom;
 
-    var svg = d3.select(".container").append("svg")
-     .attr("width", width + margin.left + margin.right)
-     .attr("height", height + margin.top + margin.bottom)
-     .append("g")
-     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    var svg = newGraph();
 
     var x = d3.scale.linear()
       .range([0, width]);
@@ -27,7 +23,15 @@ dsp.service('graph', function() {
       .x(function(d) { return x(d.x); })
       .y(function(d) { return y(d.y); });
 
-    this.draw = function(data) {
+    function newGraph() {
+      var svg = d3.select(".container").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      return svg;
+    }
+    this.draw = function(data, color) {
         svg.selectAll("path").remove();
         svg.selectAll("g").remove();
   
@@ -42,9 +46,11 @@ dsp.service('graph', function() {
         svg.append("g")
           .attr("class", "y axis")
           .call(yAxis)
+          
         svg.append("path")
           .datum(data)
           .attr("class", "line")
-          .attr("d", line);
+          .attr("d", line)
+          .attr("stroke", color);
     }
 });
