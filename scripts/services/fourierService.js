@@ -38,8 +38,8 @@ dsp.service('transform', function() {
   }
 
   this.IFFT = function (input) {
-      input.forEach(function(x) { 
-        x = math.conj(x)
+      input = input.map(function(x) { 
+        return math.conj(x)
       });
       var result = this.FFT(input);
       return result;
