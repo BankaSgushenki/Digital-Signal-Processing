@@ -5,7 +5,7 @@
     <script src="libraries/angular.min.js"></script>
     <script src="libraries/d3.js"></script>
     <script src="libraries/math.js"></script>
-    <script src = "libraries/angular-route.min.js"></script>
+    <script src="libraries/angular-route.min.js"></script>
 </head>
 <style>
   body {
@@ -27,6 +27,14 @@
 
   input {
     margin: 10px 0;
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  li {
+    cursor: pointer;
   }
   .container {
     padding: 30px;
@@ -57,21 +65,29 @@
 </style>
 <body ng-app = "dsp">
   <div class = 'container' ng-controller = "fourierController">
-    <label><input type = 'text' class="form-control" placeholder="Function" ng-model = "parameters.expression">Function</label>
+
+    <label><input type = 'text' class="form-control" placeholder="Function" ng-model = "parameters.expression[0]">Function 1</label>
+    <label><input type = 'text' class="form-control" placeholder="Function" ng-model = "parameters.expression[1]">Function 2</label>
     <label><input type = 'text' class="form-control" placeholder="Sampling rate" ng-model = "parameters.N">Sampling rate</label>
     <label><input type = 'text' class="form-control" placeholder="Min X" disabled ng-model = "parameters.x_min">Min X</label>
     <label><input type = 'text' class="form-control" placeholder="Max X" ng-model = "parameters.x_max">Max X</label>
 
     <ul id = "tabs" class="nav nav-tabs" role="tablist">
-      <li role="presentation" ng-class = "{active : app.checkState('fn')}"><a role="tab" data-toggle="tab" ng-click = "drawFunction()">Function</a></li>
-      <li role="presentation" ng-class = "{active : app.checkState('dftamp')}"><a role="tab" data-toggle="tab" ng-click = "fourier(parameters.expression, 'dft', 'amp')">DFT-Amp</a></li>
-      <li role="presentation" ng-class = "{active : app.checkState('dftphase')}"><a role="tab" data-toggle="tab" ng-click = "fourier(parameters.expression, 'dft', 'phase')">DFT-Phase</a></li>
-      <li role="presentation" ng-class = "{active : app.checkState('fftamp')}"><a role="tab" data-toggle="tab"  ng-click = "fourier(parameters.expression, 'fft', 'amp')">FFT-Amp</a></li>
-      <li role="presentation" ng-class = "{active : app.checkState('fftphase')}"><a role="tab" data-toggle="tab"  ng-click = "fourier(parameters.expression, 'fft', 'phase')">FFT-Phase</a></li>
-      <li role="presentation" ng-class = "{active : app.checkState('ift')}"><a role="tab" data-toggle="tab" ng-click = "inverseFourier()">IDFT</a></li>
+      <li ng-class = "{active : app.checkState('fn')}"><a ng-click = "drawFunction()">Function</a></li>
+      <li ng-class = "{active : app.checkState('dftamp')}"><a ng-click = "fourier(parameters.expression[0], 'dft', 'amp')">DFT-Amp</a></li>
+      <li ng-class = "{active : app.checkState('dftphase')}"><a ng-click = "fourier(parameters.expression[0], 'dft', 'phase')">DFT-Phase</a></li>
+      <li ng-class = "{active : app.checkState('fftamp')}"><a ng-click = "fourier(parameters.expression[0], 'fft', 'amp')">FFT-Amp</a></li>
+      <li ng-class = "{active : app.checkState('fftphase')}"><a ng-click = "fourier(parameters.expression[0], 'fft', 'phase')">FFT-Phase</a></li>
+      <li ng-class = "{active : app.checkState('ift')}"><a ng-click = "inverseFourier()">IDFT</a></li>
+      <li ng-class = "{active : app.checkState('cnv')}"><a ng-click = "convolution_fft()">Convolution Fourier</a></li>
+      <!-- <li ng-class = "{active : app.checkState('cnv-base')}"><a ng-click = "convolution_base()">Convolution Basic</a></li> -->
+      <li ng-class = "{active : app.checkState('cor')}"><a ng-click = "correlation_fft()">Correlation Fourier</a></li>
+      <!-- <li ng-class = "{active : app.checkState('cor-base')}"><a ng-click = "correlation_base()">Correlation Basic</a></li> -->
+      <li ng-class = "{active : app.checkState('Walsh1')}"><a ng-click = "walsh(1)">Walsh</a></li>
+      <li ng-class = "{active : app.checkState('Walsh0')}"><a ng-click = "walsh(0)">Inverse Walsh</a></li>
     </ul>
 
-    <p class = 'iterations'>Iterations: {{iterations}}</p>
+    <!-- <p class = 'iterations'>Iterations: {{iterations}}</p> -->
   </div>
 
   <script src="app.js"></script>

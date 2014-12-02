@@ -44,4 +44,32 @@ dsp.service('transform', function() {
       var result = this.FFT(input);
       return result;
   }
+
+  this.walsh = function(input, dir) {
+      var N = input.length;
+      if (N == 1) return input;
+
+      var left =[], right = [];
+      for( var j = 0; j < N/2; j++) {
+        left[j] = input[j] + input[j + N / 2];
+        right[j] = input[j] - input[j + N / 2];
+      }
+
+      var b_left =  this.walsh(left, dir);
+      var b_right =  this.walsh(right, dir);
+
+      var y = [];
+
+      if (dir == 1)  // Прямое преобразование
+                for (var j = 0; j < N / 2; j++) {
+                    y[j] = b_left[j] / 2;
+                    y[j + N / 2] = b_right[j] / 2;
+                }
+            else          // Обратное преобразование
+                for (var j = 0; j < N / 2; j++) {
+                    y[j] = b_left[j];
+                    y[j + N / 2] = b_right[j];
+                }      
+      return y;
+    }
 });
