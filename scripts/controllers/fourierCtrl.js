@@ -62,7 +62,6 @@ dsp.controller('fourierController', ['$scope', 'transform', 'graph', function ($
     }
 
     //Correlation and convolution start here
-    //This code definitely sucks and need to be rewritten
 
     $scope.convolution_fft = function() {
       $scope.app.state = 'cnv';
