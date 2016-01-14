@@ -205,13 +205,14 @@ dsp.controller('fourierController', ['$scope', 'transform', 'graph', function ($
             break;
       }
       graph.clear();
-      $scope.data[0] = fourierData;
+      // $scope.data[0] = fourierData;
+      $scope.fourierData = fourierData;
       graph.draw(format(fourierData, spectrType), 0);
     }
 
     $scope.inverseFourier = function() {
         $scope.app.state = 'ift';
-        $scope.data[0] = transform.IFFT($scope.data[0]);
+        $scope.data[0] = transform.IFFT($scope.fourierData);
         $scope.iterations = 0;
 
         var step =  ($scope.parameters.x_max - $scope.parameters.x_min)/$scope.parameters.N;
